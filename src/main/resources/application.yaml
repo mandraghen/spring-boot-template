@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sb-template
+  docker:
+    compose:
+      enabled: false
+  profiles:
+    active: local
+  jpa:
+    open-in-view: false

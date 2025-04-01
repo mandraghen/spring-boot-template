@@ -9,4 +9,5 @@ on:
 jobs:
   build:
     uses:
-      ./.github/workflows/build-gradle.yml
+      ./.github/workflows/build-gradle.yaml
+    secrets: inherit

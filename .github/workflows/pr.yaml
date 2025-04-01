@@ -8,5 +8,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
     uses:
-      ./.github/workflows/build-gradle.yml
+      ./.github/workflows/build-gradle.yaml
+    secrets: inherit

@@ -4,14 +4,21 @@ on:
   push:
     branches:
       - "main"
+  #temporary
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   build:
+    permissions:
+      contents: read
     uses:
-      ./.github/workflows/build-gradle.yml
+      ./.github/workflows/build-gradle.yaml
+    secrets: inherit
   dependency-submission:
     uses:
-      ./.github/workflows/dependency-submission.yml
+      ./.github/workflows/dependency-submission.yaml
   dockerize:
     needs: build
     permissions:
@@ -20,7 +27,7 @@ jobs:
       attestations: write
       id-token: write
     uses:
-      mandraghen/gh-actions-template/.github/workflows/dockerize.yml@main
+      mandraghen/gh-actions-template/.github/workflows/dockerize.yaml@main
 #
 #  local-deploy:
 #    needs: dockerize

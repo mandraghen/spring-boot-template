@@ -1,0 +1,30 @@
+name: Pull request action with Gradle
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    uses:
+      ./.github/workflows/build-gradle.yml
+  dependency-submission:
+    uses:
+      ./.github/workflows/dependency-submission.yml
+  dockerize:
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    uses:
+      mandraghen/gh-actions-template/.github/workflows/dockerize.yml@main
+#
+#  local-deploy:
+#    needs: dockerize
+#    uses: ./.github/workflows/promote.yml
+#    with:
+#      environment: local
+#    secrets: inherit

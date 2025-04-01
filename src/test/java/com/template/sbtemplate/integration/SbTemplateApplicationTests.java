@@ -20,6 +20,8 @@ class SbTemplateApplicationTests {
 
     @Test
     void contextLoads() {
+        // This test is used to check if the application context loads successfully
+        // You can add more specific tests here as needed
     }
 
 }

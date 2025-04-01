@@ -11,12 +11,12 @@ on:
 
 jobs:
   build:
-    permissions:
-      contents: read
     uses:
       ./.github/workflows/build-gradle.yaml
     secrets: inherit
   dependency-submission:
+    permissions:
+      contents: write
     uses:
       ./.github/workflows/dependency-submission.yaml
   dockerize:

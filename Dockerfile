@@ -3,7 +3,7 @@ FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /builder
 # This points to the built jar file in the target folder
 # Adjust this to 'build/libs/*.jar' if you're using Gradle
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/*.jar
 # Copy the jar file to the working directory and rename it to application.jar
 COPY ${JAR_FILE} application.jar
 # Extract the jar file using an efficient layout
@@ -20,7 +20,7 @@ COPY --from=builder /builder/extracted/spring-boot-loader/ ./
 COPY --from=builder /builder/extracted/snapshot-dependencies/ ./
 COPY --from=builder /builder/extracted/application/ ./
 # Execute the CDS training run
-RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
+RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar --spring.profiles.active=cds
 # Start the application jar with CDS enabled - this is not the uber jar used by the builder
 # This jar only contains application code and references to the extracted jar files
 # This layout is efficient to start up and CDS friendly

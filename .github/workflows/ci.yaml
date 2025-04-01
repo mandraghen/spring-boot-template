@@ -1,24 +1,20 @@
-name: Pull request action with Gradle
+name: CI action with Gradle
 
 on:
   push:
     branches:
       - "main"
-  #temporary
-  pull_request:
-    branches:
-      - "main"
 
 jobs:
   build:
-    permissions:
-      contents: read
     uses:
-      ./.github/workflows/build-gradle.yaml
+      mandraghen/gh-actions-template/.github/workflows/build-gradle.yaml@main
     secrets: inherit
   dependency-submission:
+    permissions:
+      contents: write
     uses:
-      ./.github/workflows/dependency-submission.yaml
+      mandraghen/gh-actions-template/.github/workflows/dependency-submission.yaml@main
   dockerize:
     needs: build
     permissions:

@@ -1,0 +1,22 @@
+spring:
+  jpa:
+    # Specify explicitly the dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    # Disable Hibernate usage of JDBC metadata
+    properties:
+      hibernate:
+        boot:
+          allow_jdbc_metadata_access: false
+
+      # Database initialization should typically be performed outside of Spring lifecycle
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    hikari:
+      allow-pool-suspension: true

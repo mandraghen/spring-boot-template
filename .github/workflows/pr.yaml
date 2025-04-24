@@ -1,12 +1,12 @@
-name: Pull request action with Gradle
+name: PR action with Gradle
 
 on:
   pull_request:
     branches:
       - "main"
 
-
 jobs:
   build:
     uses:
-      ./.github/workflows/build-gradle.yml
+      mandraghen/gh-actions-template/.github/workflows/build-gradle.yaml@main
+    secrets: inherit

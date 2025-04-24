@@ -1,4 +1,4 @@
-name: Pull request action with Gradle
+name: CI action with Gradle
 
 on:
   push:
@@ -8,10 +8,13 @@ on:
 jobs:
   build:
     uses:
-      ./.github/workflows/build-gradle.yml
+      mandraghen/gh-actions-template/.github/workflows/build-gradle.yaml@main
+    secrets: inherit
   dependency-submission:
+    permissions:
+      contents: write
     uses:
-      ./.github/workflows/dependency-submission.yml
+      mandraghen/gh-actions-template/.github/workflows/dependency-submission.yaml@main
   dockerize:
     needs: build
     permissions:
@@ -20,7 +23,7 @@ jobs:
       attestations: write
       id-token: write
     uses:
-      mandraghen/gh-actions-template/.github/workflows/dockerize.yml@main
+      mandraghen/gh-actions-template/.github/workflows/dockerize.yaml@main
 #
 #  local-deploy:
 #    needs: dockerize

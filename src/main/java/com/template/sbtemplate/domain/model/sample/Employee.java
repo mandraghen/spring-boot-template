@@ -27,7 +27,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(
         indexes = {@Index(name = "employee_email_index", columnList = "email", unique = true)}
@@ -49,10 +48,10 @@ public class Employee extends AbstractEntity {
             foreignKey = @ForeignKey(name = "fk_employee_address"))
     private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = "fk_employee_department"))
     private Department department;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Project> projects;
 }

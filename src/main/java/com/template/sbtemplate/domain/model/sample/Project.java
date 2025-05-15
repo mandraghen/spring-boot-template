@@ -21,7 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(
         indexes = {@Index(name = "project_code_index", columnList = "code", unique = true)}

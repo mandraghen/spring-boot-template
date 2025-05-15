@@ -14,14 +14,14 @@ spring:
       naming:
         physical-strategy:threads: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     #temp
-    properties:
-      jakarta:
-        persistence:
-          schema-generation:
-            scripts:
-              action: create
-              create-target: schema.sql
-            create-source: metadata
+#    properties:
+#      jakarta:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: schema.sql
+#            create-source: metadata
     ##
   threads:
     virtual:

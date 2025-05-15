@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Address extends AbstractEntity {
     @SequenceGenerator(name = "address_id_seq", sequenceName = "address_sequence", allocationSize = 1)

@@ -21,7 +21,6 @@ import java.time.ZonedDateTime;
 @Setter
 @MappedSuperclass
 @NoArgsConstructor
-//@SuperBuilder(toBuilder = true)
 public abstract class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +38,5 @@ public abstract class AbstractEntity implements Serializable {
     private ZonedDateTime updated;
 
     @Version
-//    @Builder.Default
     private Long version = 0L;
 }

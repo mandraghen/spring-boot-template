@@ -2,8 +2,12 @@ spring:
   docker:
     compose:
       enabled: true
-
+  jpa:
+    hibernate:
+      default_schema: public
   datasource:
     url: jdbc:postgresql://localhost:5433/postgres
     username: postgres
     password: postgres
+  liquibase:
+    default-schema: public

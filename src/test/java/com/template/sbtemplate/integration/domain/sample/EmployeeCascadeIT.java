@@ -1,8 +1,8 @@
 package com.template.sbtemplate.integration.domain.sample;
 
-import com.template.sbtemplate.domain.model.sample.Address;
-import com.template.sbtemplate.domain.model.sample.Employee;
-import com.template.sbtemplate.domain.model.sample.Project;
+import com.template.sbtemplate.domain.model.Address;
+import com.template.sbtemplate.domain.model.Employee;
+import com.template.sbtemplate.domain.model.Project;
 import com.template.sbtemplate.domain.repository.AddressRepository;
 import com.template.sbtemplate.domain.repository.EmployeeRepository;
 import com.template.sbtemplate.domain.repository.ProjectRepository;
@@ -125,5 +125,18 @@ class EmployeeCascadeIT extends TestContainers {
 
         // Project should not be deleted (no REMOVE cascade), but the relation should be removed
         assertThat(projectRepository.findById(project.getId())).isPresent();
+    }
+
+    @Test
+    void testAddressOrphanRemoval() {
+        Address address = addressRepository.save(Address.builder().street("Orphan St").build());
+        Employee employee = employeeRepository.save(Employee.builder().name("Orphan").address(address).build());
+
+        // Remove the address from the employee
+        employee.setAddress(null);
+        employeeRepository.saveAndFlush(employee);
+
+        // Address should be deleted from the database
+        assertThat(addressRepository.findById(address.getId())).isEmpty();
     }
 }

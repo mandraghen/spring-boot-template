@@ -13,8 +13,28 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy:threads: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    #temp
-#    properties:
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: true
+          region:
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
+          use_query_cache: true
+          auto_evict_collection_cache: true
+          redisson:
+            fallback: true
+            config: redisson/redisson.yaml
+            defaultCache:
+              eviction:
+                max_entries: 10000
+              expiration:
+                time_to_live: 7200000 # in milliseconds
+                max_idle_time: 7200000 # in milliseconds
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 10
+      #temp
 #      jakarta:
 #        persistence:
 #          schema-generation:
@@ -28,3 +48,5 @@ spring:
       enabled: true
   liquibase:
     default-schema: db_template
+mapstruct:
+  defaultComponentModel: spring

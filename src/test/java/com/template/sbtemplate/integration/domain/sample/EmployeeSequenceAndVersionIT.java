@@ -1,6 +1,6 @@
 package com.template.sbtemplate.integration.domain.sample;
 
-import com.template.sbtemplate.domain.model.sample.Employee;
+import com.template.sbtemplate.domain.model.Employee;
 import com.template.sbtemplate.domain.repository.EmployeeRepository;
 import com.template.sbtemplate.integration.TestContainers;
 import jakarta.persistence.OptimisticLockException;

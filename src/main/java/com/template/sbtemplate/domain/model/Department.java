@@ -1,11 +1,12 @@
-package com.template.sbtemplate.domain.model.sample;
+package com.template.sbtemplate.domain.model;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Index;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.List;
 
@@ -23,11 +26,13 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(
-        indexes = {@Index(name = "project_code_index", columnList = "code", unique = true)}
+        indexes = {@Index(name = "department_code_index", columnList = "code", unique = true)}
 )
-public class Project extends AbstractEntity {
-    @SequenceGenerator(name = "project_id_seq", sequenceName = "project_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_id_seq")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
+public class Department extends BasicEntity {
+    @SequenceGenerator(name = "department_id_seq", sequenceName = "department_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_id_seq")
     @Column(updatable = false)
     private Long id;
 
@@ -35,6 +40,6 @@ public class Project extends AbstractEntity {
 
     private String name;
 
-    @ManyToMany(mappedBy = "projects")
+    @OneToMany(mappedBy = "department")
     private List<Employee> employees;
 }

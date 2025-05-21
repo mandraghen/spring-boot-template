@@ -1,5 +1,6 @@
-package com.template.sbtemplate.domain.model.sample;
+package com.template.sbtemplate.domain.model;
 
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Data
 @Entity
@@ -18,7 +21,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class Address extends AbstractEntity {
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
+public class Address extends BasicEntity {
     @SequenceGenerator(name = "address_id_seq", sequenceName = "address_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_id_seq")
     @Column(updatable = false)
@@ -34,6 +39,6 @@ public class Address extends AbstractEntity {
 
     private String country;
 
-    @OneToOne(mappedBy = "address", orphanRemoval = true)
+    @OneToOne(mappedBy = "address")
     private Employee employee;
 }

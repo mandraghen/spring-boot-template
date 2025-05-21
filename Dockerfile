@@ -20,7 +20,9 @@ COPY --from=builder /builder/extracted/spring-boot-loader/ ./
 COPY --from=builder /builder/extracted/snapshot-dependencies/ ./
 COPY --from=builder /builder/extracted/application/ ./
 # Execute the CDS training run
-RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar --spring.profiles.active=cds
+RUN java -XX:ArchiveClassesAtExit=application.jsa \
+         -Dspring.context.exit=onRefresh \
+         -jar application.jar --spring.profiles.active=cds
 # Start the application jar with CDS enabled - this is not the uber jar used by the builder
 # This jar only contains application code and references to the extracted jar files
 # This layout is efficient to start up and CDS friendly

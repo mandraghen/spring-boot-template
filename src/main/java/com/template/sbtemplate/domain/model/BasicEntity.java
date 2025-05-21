@@ -1,4 +1,4 @@
-package com.template.sbtemplate.domain.model.sample;
+package com.template.sbtemplate.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 @Setter
 @MappedSuperclass
 @NoArgsConstructor
-public abstract class AbstractEntity implements Serializable {
+public abstract class BasicEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

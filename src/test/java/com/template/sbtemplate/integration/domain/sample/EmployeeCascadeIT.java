@@ -9,10 +9,10 @@ import com.template.sbtemplate.domain.repository.ProjectRepository;
 import com.template.sbtemplate.integration.TestContainers;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 class EmployeeCascadeIT extends TestContainers {
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -44,6 +43,7 @@ class EmployeeCascadeIT extends TestContainers {
     }
 
     @Test
+    @Transactional
     void testAddressCascadeMerge() {
         Address address = addressRepository.save(Address.builder().street("Old St").build());
         Employee employee = employeeRepository.save(Employee.builder().name("Jane").address(address).build());
@@ -79,6 +79,7 @@ class EmployeeCascadeIT extends TestContainers {
     }
 
     @Test
+    @Transactional
     void testAddressCascadeRefresh() {
         Address address = addressRepository.save(Address.builder().street("Refresh St").build());
         Employee employee = employeeRepository.save(Employee.builder().name("Refresh").address(address).build());
@@ -102,6 +103,7 @@ class EmployeeCascadeIT extends TestContainers {
     }
 
     @Test
+    @Transactional
     void testProjectCascadeMerge() {
         Project project = projectRepository.save(Project.builder().code("P2").name("Project 2").build());
         ArrayList<Project> projects = new ArrayList<>(List.of(project));
@@ -116,6 +118,7 @@ class EmployeeCascadeIT extends TestContainers {
     }
 
     @Test
+    @Transactional
     void testProjectCascadeRemove() {
         Project project = projectRepository.save(Project.builder().code("P3").name("Project 3").build());
         ArrayList<Project> projects = new ArrayList<>(List.of(project));
@@ -128,6 +131,7 @@ class EmployeeCascadeIT extends TestContainers {
     }
 
     @Test
+    @Transactional
     void testAddressOrphanRemoval() {
         Address address = addressRepository.save(Address.builder().street("Orphan St").build());
         Employee employee = employeeRepository.save(Employee.builder().name("Orphan").address(address).build());

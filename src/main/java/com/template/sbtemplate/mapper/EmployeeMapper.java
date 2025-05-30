@@ -2,13 +2,17 @@ package com.template.sbtemplate.mapper;
 
 import com.template.sbtemplate.domain.model.Employee;
 import com.template.sbtemplate.dto.EmployeeDto;
+import com.template.sbtemplate.populator.AddressPopulator;
+import com.template.sbtemplate.populator.DepartmentPopulator;
+import com.template.sbtemplate.populator.ProjectPopulator;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(uses = {AddressMapper.class, DepartmentMapper.class, ProjectMapper.class})
+@Mapper(uses = {AddressMapper.class, AddressPopulator.class, DepartmentMapper.class, DepartmentPopulator.class,
+        ProjectMapper.class, ProjectPopulator.class})
 public interface EmployeeMapper extends GenericMapper<Employee, EmployeeDto> {
 
     @BeanMapping(ignoreByDefault = true)
@@ -21,4 +25,16 @@ public interface EmployeeMapper extends GenericMapper<Employee, EmployeeDto> {
     @Named("employeeBasic")
     @Override
     EmployeeDto entityToBasicDto(Employee employee);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    @Mapping(target = "addressId", ignore = true)
+    @Mapping(target = "departmentId", ignore = true)
+    @Mapping(target = "address", qualifiedByName = "newOrExistingAddress")
+    @Mapping(target = "department", qualifiedByName = "newOrExistingDepartment")
+    @Mapping(target = "projects", qualifiedByName = "newOrExistingProject")
+    @Named("employeeNewEntity")
+    Employee toNewEntity(EmployeeDto dto);
 }

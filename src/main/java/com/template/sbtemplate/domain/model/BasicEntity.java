@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
+@SuperBuilder
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class BasicEntity implements Serializable {
@@ -38,5 +40,5 @@ public abstract class BasicEntity implements Serializable {
     private ZonedDateTime updated;
 
     @Version
-    private Long version = 0L;
+    private Long version;
 }

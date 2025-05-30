@@ -8,16 +8,22 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/employee")
 @RequiredArgsConstructor
@@ -25,10 +31,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @Operation(summary = "Create a new employee")
+    //TODO Create integration tests for all cases
+    @Operation(
+            summary = "Create a new employee",
+            description = "Create an employee. Returns the created employee or 409 if it already exists.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Employee created",
+                            content = @Content(schema = @Schema(implementation = EmployeeDto.class))),
+                    @ApiResponse(responseCode = "409", description = "Employee already exists",
+                            content = @Content)
+            }
+    )
     @PostMapping
-    public ResponseEntity<EmployeeDto> create(@RequestBody EmployeeDto emnployeeDto) {
-        return ResponseEntity.ok(employeeService.create(emnployeeDto));
+    public ResponseEntity<EmployeeDto> create(@RequestBody @Valid EmployeeDto employeeDto) {
+        return employeeService.createOrUpdate(employeeDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    log.debug("Employee with id {} or email {} already exists",
+                            employeeDto.getId(), employeeDto.getEmail());
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                });
     }
 
     @Operation(
@@ -48,28 +70,24 @@ public class EmployeeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @Operation(summary = "Update an employee")
-//    @PutMapping("/{id}")
-//    public EmployeeDTO update(@PathVariable Long id, @RequestBody EmployeeDTO dto) {
-//        Employee employee = mapToEntity(dto);
-//        Employee updated = service.update(id, employee);
-//        return mapToDTO(updated, dto.addresses != null);
-//    }
-//
-//    @Operation(summary = "Delete an employee")
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable Long id) {
-//        service.delete(id);
-//    }
-//
-//    // Mapping methods (implement as needed)
-//    private Employee mapToEntity(EmployeeDTO dto) {
-//        // Map DTO to entity (implement as needed)
-//        return null;
-//    }
-//
-//    private EmployeeDTO mapToDTO(Employee employee, boolean includeAddresses) {
-//        // Map entity to DTO, include addresses if requested
-//        return null;
-//    }
+    @Operation(
+            summary = "Update an employee",
+            description = "Create or update an employee. If the employee exists, it will be updated; otherwise, " +
+                    "a new one will be created.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Employee created or updated",
+                            content = @Content(schema = @Schema(implementation = EmployeeDto.class)))
+            }
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> update(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
+        return ResponseEntity.ok(employeeService.update(id, employeeDto));
+    }
+
+    @Operation(summary = "Delete an employee")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        employeeService.delete(id);
+        return ResponseEntity.ok(null);
+    }
 }

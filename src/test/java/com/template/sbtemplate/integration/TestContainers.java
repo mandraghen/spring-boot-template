@@ -2,8 +2,10 @@ package com.template.sbtemplate.integration;
 
 import com.redis.testcontainers.RedisContainer;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+@ActiveProfiles({"test", "local"})
 public abstract class TestContainers {
 
     @ServiceConnection

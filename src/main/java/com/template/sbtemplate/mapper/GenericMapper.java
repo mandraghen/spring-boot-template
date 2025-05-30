@@ -35,5 +35,15 @@ public interface GenericMapper<S extends BasicEntity, T extends BasicEntityDto> 
         return toDto(entity, Scope.BASIC);
     }
 
-    S toEntity(T dto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    @Named("newEntity")
+    S toNewEntity(T dto);
+
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Named("updateEntity")
+    S toUpdateEntity(T dto);
 }

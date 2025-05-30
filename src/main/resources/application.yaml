@@ -34,19 +34,9 @@ spring:
           events:
             log:
               LOG_QUERIES_SLOWER_THAN_MS: 10
-      #temp
-#      jakarta:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: schema.sql
-#            create-source: metadata
-    ##
   threads:
     virtual:
       enabled: true
   liquibase:
     default-schema: db_template
-mapstruct:
-  defaultComponentModel: spring
+    contexts: default

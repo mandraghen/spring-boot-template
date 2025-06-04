@@ -37,4 +37,12 @@ public interface EmployeeMapper extends GenericMapper<Employee, EmployeeDto> {
     @Mapping(target = "projects", qualifiedByName = "newOrExistingProject")
     @Named("employeeNewEntity")
     Employee toNewEntity(EmployeeDto dto);
+
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Mapping(target = "address", qualifiedByName = "existingAddress")
+    @Mapping(target = "department", qualifiedByName = "existingDepartment")
+    @Mapping(target = "projects", qualifiedByName = "existingProject")
+    @Named("employeeUpdateEntity")
+    Employee toUpdateEntity(EmployeeDto dto);
 }

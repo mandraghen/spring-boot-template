@@ -5,7 +5,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Index;
@@ -26,6 +25,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -51,8 +51,8 @@ public class Employee extends BasicEntity {
     private String phoneNumber;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "address_id", referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_employee_address"))
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
     private Address address;
 
     @Setter(AccessLevel.NONE)
@@ -60,7 +60,8 @@ public class Employee extends BasicEntity {
     private Long addressId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = "fk_employee_department"))
+    @JoinColumn(name = "department_id")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
     private Department department;
 
     @Setter(AccessLevel.NONE)
@@ -68,5 +69,19 @@ public class Employee extends BasicEntity {
     private Long departmentId;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
     private List<Project> projects;
+
+    public void setAddress(Address address) {
+//        if (Objects.nonNull(this.address)) {
+//            this.address.setEmployee(null);
+//        }
+        if (Objects.nonNull(address)) {
+            if (Objects.nonNull(address.getEmployee()) && address.getEmployee() != this) {
+                address.getEmployee().setAddress(null);
+            }
+            address.setEmployee(this);
+        }
+        this.address = address;
+    }
 }

@@ -10,112 +10,41 @@ import com.template.sbtemplate.dto.DepartmentDto;
 import com.template.sbtemplate.dto.EmployeeDto;
 import com.template.sbtemplate.dto.ProjectDto;
 import com.template.sbtemplate.integration.TestContainers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.template.sbtemplate.integration.data.DbDataDto.EXISTING_ADDRESS;
+import static com.template.sbtemplate.integration.data.DbDataDto.EXISTING_DEPARTMENT;
+import static com.template.sbtemplate.integration.data.DbDataDto.EXISTING_EMPLOYEE;
+import static com.template.sbtemplate.integration.data.DbDataDto.EXISTING_PROJECT;
+import static com.template.sbtemplate.integration.data.DbDataDto.NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS;
+import static com.template.sbtemplate.integration.data.DbDataDto.NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS2;
+import static com.template.sbtemplate.integration.data.DbDataDto.NEW_COMPLETE_EMPLOYEE_WITH_NEW_RELATIONS;
+import static com.template.sbtemplate.integration.data.DbDataDto.NEW_EMPLOYEE;
+import static com.template.sbtemplate.integration.data.DbDataDto.NO_EMAIL_EMPLOYEE;
+import static com.template.sbtemplate.integration.data.DbDataDto.OTHER_ADDRESS;
+import static com.template.sbtemplate.integration.data.DbDataDto.OTHER_DEPARTMENT;
+import static com.template.sbtemplate.integration.data.DbDataDto.OTHER_PROJECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 //TODO test put and delete operations
 //TODO unit tests with full coverage
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EmployeeControllerIT extends TestContainers {
-    private static EmployeeDto EXISTING_EMPLOYEE;
-    private static DepartmentDto EXISTING_DEPARTMENT;
-    private static AddressDto EXISTING_ADDRESS;
-    private static ProjectDto EXISTING_PROJECT;
-    private static EmployeeDto NEW_EMPLOYEE;
-    private static EmployeeDto NO_EMAIL_EMPLOYEE;
-    private static EmployeeDto NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS;
-    private static EmployeeDto NEW_COMPLETE_EMPLOYEE_WITH_NEW_RELATIONS;
 
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
     private EmployeeRepository employeeRepository;
-
-    @BeforeAll
-    static void setUp() {
-        EXISTING_EMPLOYEE = EmployeeDto.builder()
-                .id(6L)
-                .name("Salvo")
-                .email("salvo@salvo.it")
-                .phoneNumber("321321231")
-                .build();
-
-        NEW_EMPLOYEE = EmployeeDto.builder()
-                .name("John Doe")
-                .email("john.doe@doe.com")
-                .phoneNumber("123456789")
-                .build();
-
-        NO_EMAIL_EMPLOYEE = NEW_EMPLOYEE.toBuilder()
-                .email("")
-                .build();
-
-        EXISTING_ADDRESS = AddressDto.builder()
-                .id(6L)
-                .street("via Piave")
-                .city("Casorezzo")
-                .postalCode("20003")
-                .country("Italia")
-                .build();
-
-        EXISTING_DEPARTMENT = DepartmentDto.builder()
-                .id(1L)
-                .code("123hhoih")
-                .name("dip")
-                .build();
-
-        EXISTING_PROJECT = ProjectDto.builder()
-                .id(1L)
-                .code("pro123")
-                .name("project")
-                .build();
-
-        NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS = EmployeeDto.builder()
-                .name("Jane Doe")
-                .email("jane.doe@doe.com")
-                .phoneNumber("987654321")
-                .department(DepartmentDto.builder()
-                        .id(EXISTING_DEPARTMENT.getId())
-                        .build())
-                .address(AddressDto.builder()
-                        .id(EXISTING_ADDRESS.getId())
-                        .build())
-                .projects(List.of(ProjectDto.builder()
-                        .id(EXISTING_PROJECT.getId())
-                        .build()))
-                .build();
-
-        NEW_COMPLETE_EMPLOYEE_WITH_NEW_RELATIONS = EmployeeDto.builder()
-                .name("Jane Doe2")
-                .email("jane.doe2@doe.com")
-                .phoneNumber("987654321")
-                .department(DepartmentDto.builder()
-                        .code("ENG")
-                        .name("Engineering")
-                        .build())
-                .address(AddressDto.builder()
-                        .street("123 Main St")
-                        .city("Springfield")
-                        .state("IL")
-                        .postalCode("62701")
-                        .country("USA")
-                        .build())
-                .projects(List.of(ProjectDto.builder()
-                        .code("PROJ-123")
-                        .name("Project Alpha")
-                        .build()))
-                .build();
-    }
 
     @Test
     void getExistingEmployee_shouldReturnEmployee() {
@@ -153,7 +82,7 @@ public class EmployeeControllerIT extends TestContainers {
     }
 
     @Test
-    void saveNewEmployeeWithExistingRelations_shouldPersist() {
+    void createNewEmployeeWithExistingRelations_shouldPersist() {
         ResponseEntity<EmployeeDto> response = restTemplate
                 .postForEntity("/employee", NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS, EmployeeDto.class);
 
@@ -173,7 +102,7 @@ public class EmployeeControllerIT extends TestContainers {
     }
 
     @Test
-    void saveNewEmployeeWithNewRelations_shouldPersist() {
+    void createNewEmployeeWithNewRelations_shouldPersist() {
         ResponseEntity<EmployeeDto> response = restTemplate
                 .postForEntity("/employee", NEW_COMPLETE_EMPLOYEE_WITH_NEW_RELATIONS, EmployeeDto.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -228,7 +157,7 @@ public class EmployeeControllerIT extends TestContainers {
     }
 
     @Test
-    void saveEmployee_withNullRelations_shouldPersist() {
+    void createEmployee_withNullRelations_shouldPersist() {
         ResponseEntity<EmployeeDto> response = restTemplate
                 .postForEntity("/employee", NEW_EMPLOYEE, EmployeeDto.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -253,5 +182,118 @@ public class EmployeeControllerIT extends TestContainers {
                 .postForEntity("/employee", NO_EMAIL_EMPLOYEE, EmployeeDto.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void updateExistingEmployee_shouldPersist() {
+        EmployeeDto updateDto = EXISTING_EMPLOYEE.toBuilder()
+                .name("Updated Name")
+                .department(OTHER_DEPARTMENT)
+                .address(OTHER_ADDRESS)
+                .projects(List.of(OTHER_PROJECT))
+                .build();
+
+        ResponseEntity<EmployeeDto> updateResponse = restTemplate
+                .exchange("/employee/" + updateDto.getId(), HttpMethod.PUT, new HttpEntity<>(updateDto),
+                        EmployeeDto.class);
+
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        EmployeeDto returned = updateResponse.getBody();
+        assertThat(returned).isNotNull();
+        assertThat(returned.getName()).isEqualTo(updateDto.getName());
+
+        checkRelations(returned.getId(), updateDto);
+    }
+
+    @Test
+    void updateNewEmployee_shouldPersist() {
+        ResponseEntity<EmployeeDto> updateResponse = restTemplate
+                .exchange("/employee/" + NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS2.getId(), HttpMethod.PUT,
+                        new HttpEntity<>(NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS2),
+                        EmployeeDto.class);
+
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        EmployeeDto returned = updateResponse.getBody();
+        assertThat(returned).isNotNull();
+        assertThat(returned.getId()).isNotNull();
+
+        //check relations
+        checkRelations(returned.getId(), NEW_COMPLETE_EMPLOYEE_WITH_EXISTING_RELATIONS2);
+    }
+
+    private void checkRelations(Long id, EmployeeDto updateDto) {
+        Optional<Employee> savedOpt = employeeRepository.findFullById(id);
+        assertThat(savedOpt).isPresent();
+        Employee updated = savedOpt.get();
+
+        assertThat(updated.getDepartment()).isNotNull();
+        assertThat(updated.getDepartment().getId()).isEqualTo(updateDto.getDepartment().getId());
+        assertThat(updated.getAddress()).isNotNull();
+        assertThat(updated.getAddress().getId()).isEqualTo(updateDto.getAddress().getId());
+        assertThat(updated.getProjects()).isNotEmpty();
+        assertThat(updated.getProjects().getFirst()).isNotNull();
+        assertThat(updated.getProjects().getFirst().getId()).isEqualTo(updateDto.getProjects().getFirst().getId());
+    }
+
+    @Test
+    void updateEmployeeWithNewRelations_shouldReturnError() {
+        EmployeeDto updateDto = EXISTING_EMPLOYEE.toBuilder()
+                .name("Updated Name")
+                .department(DepartmentDto.builder()
+                        .id(99L)
+                        .build())
+                .address(AddressDto.builder()
+                        .id(99L)
+                        .build())
+                .projects(List.of(ProjectDto.builder()
+                        .id(99L)
+                        .build()))
+                .build();
+
+        ResponseEntity<String> updateResponse = restTemplate
+                .exchange("/employee/" + updateDto.getId(), HttpMethod.PUT, new HttpEntity<>(updateDto),
+                        String.class);
+
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        String returned = updateResponse.getBody();
+        assertThat(returned).isNotNull();
+        Optional<Employee> savedOpt = employeeRepository.findFullById(updateDto.getId());
+        assertThat(savedOpt).isPresent();
+    }
+
+    @Test
+    void deleteExistingEmployee_shouldReturnOk() {
+        //create an employee to delete
+        Employee employeeToDelete = Employee.builder()
+                .email("todelete@delete.com")
+                .name("To Delete")
+                .phoneNumber("123456789")
+                .build();
+        Employee saved = employeeRepository.save(employeeToDelete);
+
+        // When deleting the employee
+        ResponseEntity<Void> response = restTemplate
+                .exchange("/employee/" + saved.getId(), HttpMethod.DELETE, null, Void.class);
+
+        // Then the response should be No Content
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        // And the employee should no longer exist in the repository
+        assertThat(employeeRepository.existsById(saved.getId())).isFalse();
+    }
+
+    @Test
+    void deleteNonExistingEmployee_shouldReturnOk() {
+        // Given a non-existing employee ID
+        long nonExistingId = 999L;
+
+        // When trying to delete the non-existing employee
+        ResponseEntity<Void> response = restTemplate
+                .exchange("/employee/" + nonExistingId, HttpMethod.DELETE, null, Void.class);
+
+        // Then the response should be Not Found
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(employeeRepository.existsById(nonExistingId)).isFalse();
     }
 }

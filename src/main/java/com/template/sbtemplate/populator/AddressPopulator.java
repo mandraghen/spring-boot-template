@@ -20,8 +20,27 @@ public class AddressPopulator {
     public Address populateNewOrExistingAddress(AddressDto addressDto) {
         return Optional.ofNullable(addressDto)
                 .map(dto -> Optional.ofNullable(addressDto.getId())
-                        .flatMap(addressRepository::findById)
+                        .flatMap(this::findAndDetachEmployee)
                         .orElseGet(() -> addressMapper.toNewEntity(dto)))
                 .orElse(null);
+    }
+
+    @Named("existingAddress")
+    public Address populateExistingAddress(AddressDto addressDto) {
+        return Optional.ofNullable(addressDto)
+                .map(dto -> Optional.ofNullable(dto.getId())
+                        .flatMap(this::findAndDetachEmployee)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Address with id " + dto.getId() + " does not exist.")))
+                .orElse(null);
+    }
+
+    private Optional<Address> findAndDetachEmployee(Long id) {
+        return addressRepository.findById(id).map(address -> {
+            if (address.getEmployee() != null) {
+                address.getEmployee().setAddress(null);
+            }
+            return address;
+        });
     }
 }

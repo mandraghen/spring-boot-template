@@ -22,7 +22,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(exclude = "employee")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
 public class Address extends BasicEntity {
@@ -41,6 +40,8 @@ public class Address extends BasicEntity {
 
     private String country;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "address")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
     private Employee employee;
 }

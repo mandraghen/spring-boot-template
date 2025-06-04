@@ -20,7 +20,7 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
 
     @Transactional
-    public Optional<EmployeeDto> createOrUpdate(EmployeeDto employeeDto) {
+    public Optional<EmployeeDto> create(EmployeeDto employeeDto) {
         if (employeeDto.getId() != null && employeeRepository.existsById(employeeDto.getId()) ||
                 employeeRepository.existsByEmail(employeeDto.getEmail())) {
             log.debug("Employee with id {} or email {} already exists", employeeDto.getId(), employeeDto.getEmail());
@@ -44,13 +44,20 @@ public class EmployeeService {
                     employeeMapper.toDto(entity, scope));
             case BASIC -> employeeRepository.findBasicById(id).map(entity ->
                     employeeMapper.toDto(entity, scope));
-            default -> throw new IllegalArgumentException("Invalid scope: " + scope);
+            case ID_ONLY -> employeeRepository.findById(id).map(entity ->
+                    employeeMapper.toDto(entity, scope));
         };
     }
 
-    //    @Transactional
+    @Transactional
     public EmployeeDto update(Long id, EmployeeDto employeeDto) {
-        employeeDto.setId(id);
+        employeeRepository.findBasicById(id).ifPresentOrElse(existingEmployee -> {
+            employeeDto.setId(existingEmployee.getId());
+            if (employeeDto.getVersion() == null) {
+                employeeDto.setVersion(existingEmployee.getVersion());
+            }
+        }, () -> employeeDto.setId(null));
+
         Employee updated = employeeMapper.toUpdateEntity(employeeDto);
         return employeeMapper.toDto(employeeRepository.save(updated));
     }

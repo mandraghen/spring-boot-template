@@ -35,4 +35,22 @@ public class DepartmentPopulator {
                                 .orElseGet(() -> departmentMapper.toNewEntity(dto))))
                 .orElse(null);
     }
+
+    /**
+     * Populates an existing Department entity based on the provided DepartmentDto.
+     * If the dto has an id, it will try to find the department by id.
+     * If not found, it will throw an IllegalArgumentException.
+     *
+     * @param departmentDto the DepartmentDto to populate
+     * @return the populated Department entity
+     */
+    @Named("existingDepartment")
+    public Department populateExistingDepartment(DepartmentDto departmentDto) {
+        return Optional.ofNullable(departmentDto)
+                .map(dto -> Optional.ofNullable(dto.getId())
+                        .flatMap(departmentRepository::findById)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Department with id " + dto.getId() + " does not exist.")))
+                .orElse(null);
+    }
 }

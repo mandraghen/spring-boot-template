@@ -143,4 +143,30 @@ class EmployeeCascadeIT extends TestContainers {
         // Address should be deleted from the database
         assertThat(addressRepository.findById(address.getId())).isEmpty();
     }
+
+    @Test
+    @Transactional
+    void testAddressReassignmentBetweenEmployees() {
+        // Create and persist two employees, each with their own address
+        Address address1 = addressRepository.save(Address.builder().street("First St").build());
+        Address address2 = addressRepository.save(Address.builder().street("Second St").build());
+        Employee employee1 = employeeRepository.save(Employee.builder().name("Emp1").address(address1).build());
+        Employee employee2 = employeeRepository.save(Employee.builder().name("Emp2").address(address2).build());
+
+        em.refresh(address1);
+        // Reassign address1 from employee1 to employee2
+        employee2.setAddress(address1);
+        employeeRepository.saveAndFlush(employee2);
+
+        // Refresh entities
+        em.refresh(employee1);
+        em.refresh(employee2);
+
+        // employee2 should now have address1
+        assertThat(employee2.getAddress().getId()).isEqualTo(address1.getId());
+        // employee1 should have no address
+        assertThat(employee1.getAddress()).isNull();
+        // address2 is deleted because of orphan removal
+        assertThat(addressRepository.findById(address2.getId())).isNotPresent();
+    }
 }

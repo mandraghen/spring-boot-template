@@ -26,7 +26,6 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-@ToString(exclude = "employees")
 @Table(
         indexes = {@Index(name = "department_code_index", columnList = "code", unique = true)}
 )
@@ -42,6 +41,8 @@ public class Department extends BasicEntity {
 
     private String name;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "department")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "defaultCache")
     private List<Employee> employees;
 }

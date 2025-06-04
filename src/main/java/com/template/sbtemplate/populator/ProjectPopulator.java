@@ -27,4 +27,14 @@ public class ProjectPopulator {
                                 .orElseGet(() -> projectMapper.toNewEntity(dto))))
                 .orElse(null);
     }
+
+    @Named("existingProject")
+    public Project populateExistingProject(ProjectDto projectDto) {
+        return Optional.ofNullable(projectDto)
+                .map(dto -> Optional.ofNullable(dto.getId())
+                        .flatMap(projectRepository::findById)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Project with id " + dto.getId() + " does not exist.")))
+                .orElse(null);
+    }
 }

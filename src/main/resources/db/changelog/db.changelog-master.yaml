@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/init/
+  - changeSet:
+      id: load-testdata
+      author: test
+      context: test
+      changes:
+        - sqlFile:
+            path: db/changelog/testdata/testdata.sql

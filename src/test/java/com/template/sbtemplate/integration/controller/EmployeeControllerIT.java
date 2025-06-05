@@ -276,7 +276,7 @@ public class EmployeeControllerIT extends TestContainers {
                 .exchange("/employee/" + saved.getId(), HttpMethod.DELETE, null, Void.class);
 
         // Then the response should be No Content
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         // And the employee should no longer exist in the repository
         assertThat(employeeRepository.existsById(saved.getId())).isFalse();
@@ -292,7 +292,7 @@ public class EmployeeControllerIT extends TestContainers {
                 .exchange("/employee/" + nonExistingId, HttpMethod.DELETE, null, Void.class);
 
         // Then the response should be Not Found
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         assertThat(employeeRepository.existsById(nonExistingId)).isFalse();
     }

@@ -90,15 +90,15 @@ public class EmployeeController {
 
     @Operation(
             summary = "Delete an employee",
-            description = "Deletes the employee with the given ID. Returns 200 if deleted successfully or if the " +
+            description = "Deletes the employee with the given ID. Returns 204 if deleted successfully or if the " +
                     "employee does not exist.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Employee deleted", content = @Content)
+                    @ApiResponse(responseCode = "204", description = "Employee deleted", content = @Content)
             }
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         employeeService.delete(id);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

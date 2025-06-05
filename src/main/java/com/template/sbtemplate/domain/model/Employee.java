@@ -31,7 +31,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(
         indexes = {@Index(name = "employee_email_index", columnList = "email", unique = true)}

@@ -31,7 +31,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @Table(
         indexes = {@Index(name = "employee_email_index", columnList = "email", unique = true)}
@@ -73,9 +73,6 @@ public class Employee extends BasicEntity {
     private List<Project> projects;
 
     public void setAddress(Address address) {
-//        if (Objects.nonNull(this.address)) {
-//            this.address.setEmployee(null);
-//        }
         if (Objects.nonNull(address)) {
             if (Objects.nonNull(address.getEmployee()) && address.getEmployee() != this) {
                 address.getEmployee().setAddress(null);

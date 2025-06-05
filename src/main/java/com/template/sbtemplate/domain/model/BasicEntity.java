@@ -20,7 +20,7 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @MappedSuperclass
 @NoArgsConstructor
 public abstract class BasicEntity implements Serializable {

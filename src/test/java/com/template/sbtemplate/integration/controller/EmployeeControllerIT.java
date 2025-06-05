@@ -36,10 +36,8 @@ import static com.template.sbtemplate.integration.data.DbDataDto.OTHER_DEPARTMEN
 import static com.template.sbtemplate.integration.data.DbDataDto.OTHER_PROJECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-//TODO test put and delete operations
-//TODO unit tests with full coverage
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EmployeeControllerIT extends TestContainers {
+class EmployeeControllerIT extends TestContainers {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -276,7 +274,7 @@ public class EmployeeControllerIT extends TestContainers {
                 .exchange("/employee/" + saved.getId(), HttpMethod.DELETE, null, Void.class);
 
         // Then the response should be No Content
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         // And the employee should no longer exist in the repository
         assertThat(employeeRepository.existsById(saved.getId())).isFalse();
@@ -292,7 +290,7 @@ public class EmployeeControllerIT extends TestContainers {
                 .exchange("/employee/" + nonExistingId, HttpMethod.DELETE, null, Void.class);
 
         // Then the response should be Not Found
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         assertThat(employeeRepository.existsById(nonExistingId)).isFalse();
     }

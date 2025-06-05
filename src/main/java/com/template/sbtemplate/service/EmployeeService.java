@@ -21,9 +21,10 @@ public class EmployeeService {
 
     @Transactional
     public Optional<EmployeeDto> create(EmployeeDto employeeDto) {
-        if (employeeDto.getId() != null && employeeRepository.existsById(employeeDto.getId()) ||
+        if (employeeDto == null ||
+                employeeDto.getId() != null && employeeRepository.existsById(employeeDto.getId()) ||
                 employeeRepository.existsByEmail(employeeDto.getEmail())) {
-            log.debug("Employee with id {} or email {} already exists", employeeDto.getId(), employeeDto.getEmail());
+            log.debug("Employee already exists by email or id or is null: {}", employeeDto);
             return Optional.empty();
         }
 
@@ -63,6 +64,9 @@ public class EmployeeService {
     }
 
     public void delete(Long id) {
+        if (id == null) {
+            return;
+        }
         employeeRepository.deleteById(id);
     }
 }

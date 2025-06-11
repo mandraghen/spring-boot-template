@@ -72,7 +72,9 @@ sonar {
         property "sonar.projectKey", sonarProjectKey
         property "sonar.organization", sonarOrganization
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.coverage.exclusions", "**/domain/**/*,**/generated/**,**/build/**,**/*\$*.class,**/lombok/**"
+        property "sonar.coverage.exclusions", "**/domain/**/*,**/generated/**,**/build/**,**/*\$*.class,**/lombok/**," +
+                "SbTemplateApplication.class"
+        property "sonar.test.exclusions", "com/template/sbtemplate/integration/**"
     }
 }
 

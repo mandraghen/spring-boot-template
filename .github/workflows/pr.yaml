@@ -9,4 +9,6 @@ jobs:
   build:
     uses:
       mandraghen/gh-actions-template/.github/workflows/build-gradle.yaml@main
+    with:
+      upload-jar: false
     secrets: inherit

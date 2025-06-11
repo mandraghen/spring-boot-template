@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper
-public interface DepartmentMapper extends GenericMapper<Department, DepartmentDto> {
+public interface DepartmentMapper extends GenericScopedMapper<Department, DepartmentDto> {
 
     @BeanMapping(ignoreByDefault = true)
     @InheritConfiguration(name = "entityToIdOnlyDto")

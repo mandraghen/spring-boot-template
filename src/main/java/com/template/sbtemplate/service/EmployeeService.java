@@ -34,20 +34,8 @@ public class EmployeeService {
     }
 
     public Optional<EmployeeDto> get(Long id, Scope scope) {
-        if (scope == null) {
-            log.debug("Scope is null, returning response with basic view");
-            return employeeRepository.findBasicById(id)
-                    .map(employeeMapper::toDto);
-        }
-        //TODO Send the scope to the repository as well!
-        return switch (scope) {
-            case FULL -> employeeRepository.findFullById(id).map(entity ->
-                    employeeMapper.toDto(entity, scope));
-            case BASIC -> employeeRepository.findBasicById(id).map(entity ->
-                    employeeMapper.toDto(entity, scope));
-            case ID_ONLY -> employeeRepository.findById(id).map(entity ->
-                    employeeMapper.toDto(entity, scope));
-        };
+        return employeeRepository.find(id, scope)
+                .map(employee -> employeeMapper.toDto(employee, scope));
     }
 
     @Transactional

@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper
-public interface ProjectMapper extends GenericMapper<Project, ProjectDto> {
+public interface ProjectMapper extends GenericScopedMapper<Project, ProjectDto> {
 
     @BeanMapping(ignoreByDefault = true)
     @InheritConfiguration(name = "entityToIdOnlyDto")

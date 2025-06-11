@@ -13,7 +13,7 @@ import org.mapstruct.Named;
 
 @Mapper(uses = {AddressMapper.class, AddressPopulator.class, DepartmentMapper.class, DepartmentPopulator.class,
         ProjectMapper.class, ProjectPopulator.class})
-public interface EmployeeMapper extends GenericMapper<Employee, EmployeeDto> {
+public interface EmployeeMapper extends GenericScopedMapper<Employee, EmployeeDto> {
 
     @BeanMapping(ignoreByDefault = true)
     @InheritConfiguration(name = "entityToIdOnlyDto")

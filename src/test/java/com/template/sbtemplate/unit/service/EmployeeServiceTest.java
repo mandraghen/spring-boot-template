@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -103,23 +104,23 @@ class EmployeeServiceTest {
 
     @Test
     void get_whenNullIdAndNoScope_shouldReturnEmpty() {
-        when(employeeRepository.findBasicById(null)).thenReturn(Optional.empty());
+        when(employeeRepository.find(null, null)).thenReturn(Optional.empty());
 
         Optional<EmployeeDto> result = employeeService.get(null, null);
 
         assertThat(result).isEmpty();
-        verify(employeeRepository).findBasicById(null);
+        verify(employeeRepository).find(null, null);
         verifyNoInteractions(employeeMapper);
     }
 
     @Test
     void get_whenIdNotFoundAndNoScope_shouldReturnEmpty() {
-        when(employeeRepository.findBasicById(1L)).thenReturn(Optional.empty());
+        when(employeeRepository.find(1L, null)).thenReturn(Optional.empty());
 
         Optional<EmployeeDto> result = employeeService.get(1L, null);
 
         assertThat(result).isEmpty();
-        verify(employeeRepository).findBasicById(1L);
+        verify(employeeRepository).find(1L, null);
         verifyNoInteractions(employeeMapper);
     }
 
@@ -134,14 +135,14 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .build();
 
-        when(employeeRepository.findBasicById(1L)).thenReturn(Optional.of(employee));
-        when(employeeMapper.toDto(employee)).thenReturn(dto);
+        when(employeeRepository.find(1L, null)).thenReturn(Optional.of(employee));
+        when(employeeMapper.toDto(employee, null)).thenReturn(dto);
 
         Optional<EmployeeDto> result = employeeService.get(1L, null);
 
         assertThat(result).contains(dto);
-        verify(employeeRepository).findBasicById(1L);
-        verify(employeeMapper).toDto(employee);
+        verify(employeeRepository).find(1L, null);
+        verify(employeeMapper).toDto(employee, null);
     }
 
     @Test
@@ -155,13 +156,13 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .build();
 
-        when(employeeRepository.findFullById(1L)).thenReturn(Optional.of(employee));
+        when(employeeRepository.find(1L, Scope.FULL)).thenReturn(Optional.of(employee));
         when(employeeMapper.toDto(employee, Scope.FULL)).thenReturn(dto);
 
         Optional<EmployeeDto> result = employeeService.get(1L, Scope.FULL);
 
         assertThat(result).contains(dto);
-        verify(employeeRepository).findFullById(1L);
+        verify(employeeRepository).find(1L, Scope.FULL);
         verify(employeeMapper).toDto(employee, Scope.FULL);
     }
 
@@ -176,13 +177,13 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .build();
 
-        when(employeeRepository.findBasicById(1L)).thenReturn(Optional.of(employee));
+        when(employeeRepository.find(1L, Scope.BASIC)).thenReturn(Optional.of(employee));
         when(employeeMapper.toDto(employee, Scope.BASIC)).thenReturn(dto);
 
         Optional<EmployeeDto> result = employeeService.get(1L, Scope.BASIC);
 
         assertThat(result).contains(dto);
-        verify(employeeRepository).findBasicById(1L);
+        verify(employeeRepository).find(1L, Scope.BASIC);
         verify(employeeMapper).toDto(employee, Scope.BASIC);
     }
 
@@ -197,13 +198,13 @@ class EmployeeServiceTest {
                 .name("John Doe")
                 .build();
 
-        when(employeeRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(employeeRepository.find(1L, Scope.ID_ONLY)).thenReturn(Optional.of(employee));
         when(employeeMapper.toDto(employee, Scope.ID_ONLY)).thenReturn(dto);
 
         Optional<EmployeeDto> result = employeeService.get(1L, Scope.ID_ONLY);
 
         assertThat(result).contains(dto);
-        verify(employeeRepository).findById(1L);
+        verify(employeeRepository).find(1L, Scope.ID_ONLY);
         verify(employeeMapper).toDto(employee, Scope.ID_ONLY);
     }
 
@@ -295,5 +296,11 @@ class EmployeeServiceTest {
         employeeService.delete(1L);
 
         verify(employeeRepository).deleteById(1L);
+    }
+
+    @Test
+    void delete_whenIdIsNull_shouldNotCallRepository() {
+        employeeService.delete(null);
+        verify(employeeRepository, never()).deleteById(any());
     }
 }

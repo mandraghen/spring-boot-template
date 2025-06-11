@@ -1,4 +1,6 @@
 spring:
+  liquibase:
+    enabled: false
   jpa:
     # Specify explicitly the dialect
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -8,6 +10,9 @@ spring:
       hibernate:
         boot:
           allow_jdbc_metadata_access: false
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
 
       # Database initialization should typically be performed outside of Spring lifecycle
     hibernate:

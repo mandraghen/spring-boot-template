@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.5.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id "org.sonarqube" version "6.2.0.5505"
@@ -28,6 +29,7 @@ ext {
     redissonVersion = '3.46.0'
     springDocVersion = '2.8.8'
     redisTestcontainersVersion = '2.2.4'
+    mapstructVersion = '1.6.3'
 }
 
 repositories {
@@ -45,8 +47,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Extensions
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation 'org.liquibase:liquibase-core'
     implementation "org.redisson:redisson-hibernate-6:${redissonVersion}"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
@@ -78,6 +80,17 @@ test {
     jvmArgs += [
             "-javaagent:${configurations.testRuntimeClasspath.find { it.name.contains('mockito-core') }}"
     ]
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+    dependsOn test
+}
+
+test {
+    finalizedBy jacocoTestReport
 }
 
 compileJava {

@@ -11,6 +11,16 @@ This repository serves as a template for creating new projects based on Spring B
 - **Hibernate JPA**: Configured for efficient database interaction with PostgreSQL.
 - **Profiles**: Supports multiple Spring profiles (`local`, `cds`) for environment-specific configurations.
 - **Optimized Docker Images**: Uses layered JARs and Class Data Sharing (CDS) for faster startup and efficient builds.
+- **RESTful API**: Standard endpoints for managing Employee resource and related entities.
+- **DTO and Mapper Pattern**: Clean separation between API and persistence layers using DTOs and mappers.
+- **Custom Exception Handling**: Example of centralized exception handling with ControllerExceptionHandler.
+- **Repository Abstraction**: Example of generic repository with ScopedRepository interface for reusable repository logic, extended by concrete repositories.
+- **Unit and Integration Testing**: JUnit 5 tests with Mockito and Testcontainers for robust test coverage.
+- **Lombok**: Reduces boilerplate code for models and DTOs.
+- **Testcontainers**: Enables integration tests with containerized PostgreSQL.
+- **Validation**: Some example of input validation for DTOs.
+- **Layered Architecture**: Clear separation of controller, service, repository, and domain layers.
+- **OpenAPI/Swagger Integration**: Provides API documentation for easy exploration and testing of endpoints.
 
 ## Prerequisites
 
@@ -91,6 +101,11 @@ Key dependencies used in this project:
 
 - **local**: Default profile for local development.
 - **cds**: Profile optimized for Class Data Sharing (CDS).
+
+## Testing
+- **Unit Tests**: Located in src/test/java/**/unit, covering services, populators, and exception handlers.
+- **Integration Tests**: Located in src/test/java/**/integration Use Testcontainers for real database interaction.
+- **Mocking**: Mockito is used for mocking dependencies in unit tests.
 
 ## Contributing
 

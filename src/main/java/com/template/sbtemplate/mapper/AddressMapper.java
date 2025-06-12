@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper
-public interface AddressMapper extends GenericMapper<Address, AddressDto> {
+public interface AddressMapper extends GenericScopedMapper<Address, AddressDto> {
 
     @BeanMapping(ignoreByDefault = true)
     @InheritConfiguration(name = "entityToIdOnlyDto")

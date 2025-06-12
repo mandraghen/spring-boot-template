@@ -6,8 +6,11 @@ import com.template.sbtemplate.dto.Scope;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface GenericMapper<S extends BasicEntity, T extends BasicEntityDto> {
+public interface GenericScopedMapper<S extends BasicEntity, T extends BasicEntityDto> {
+    Logger LOG = LoggerFactory.getLogger(GenericScopedMapper.class);
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id")
@@ -24,6 +27,11 @@ public interface GenericMapper<S extends BasicEntity, T extends BasicEntityDto> 
     T entityToFullDto(S entity);
 
     default T toDto(S entity, Scope scope) {
+        if (scope == null) {
+            LOG.debug("Scope is null, returning response with basic dto for entity: {}", entity);
+            return this.entityToBasicDto(entity);
+        }
+
         return switch (scope) {
             case ID_ONLY -> entityToIdOnlyDto(entity);
             case BASIC -> entityToBasicDto(entity);

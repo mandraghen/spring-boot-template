@@ -2,13 +2,12 @@ package com.template.sbtemplate.domain.repository;
 
 import com.template.sbtemplate.domain.model.Employee;
 import jakarta.persistence.QueryHint;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 
 import java.util.Optional;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends ScopedRepository<Employee, Long> {
     @QueryHints({@QueryHint(name = "org.hibernate.cacheable", value = "true")})
     @Query("SELECT e FROM Employee e " +
             "LEFT JOIN FETCH e.address " +

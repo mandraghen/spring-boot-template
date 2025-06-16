@@ -26,7 +26,7 @@ ext {
     sonarOrganization = "mandraghen"
     sonarProjectKey = sonarOrganization + "_" + project.name
 
-    redissonVersion = '3.46.0'
+    redissonVersion = '3.49.0'
     springDocVersion = '2.8.9'
     redisTestcontainersVersion = '2.2.4'
     mapstructVersion = '1.6.3'

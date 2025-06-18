@@ -7,11 +7,12 @@ import com.template.sbtemplate.dto.EmployeeDto;
 import com.template.sbtemplate.dto.Scope;
 import com.template.sbtemplate.mapper.AddressMapper;
 import com.template.sbtemplate.mapper.DepartmentMapper;
-import com.template.sbtemplate.mapper.EmployeeMapperImpl;
+import com.template.sbtemplate.mapper.EmployeeMapper;
 import com.template.sbtemplate.populator.AddressPopulator;
 import com.template.sbtemplate.populator.DepartmentPopulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,7 +34,7 @@ class EmployeeMapperTest {
     @Mock
     private DepartmentPopulator departmentPopulator;
     @InjectMocks
-    private EmployeeMapperImpl employeeMapper;
+    private EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
 
     @Test
     void toDto_whenNull_shouldReturnNull() {

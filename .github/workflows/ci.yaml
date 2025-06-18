@@ -10,11 +10,6 @@ jobs:
     uses:
       mandraghen/gh-actions-template/.github/workflows/build-gradle.yaml@main
     secrets: inherit
-  dependency-submission:
-    permissions:
-      contents: write
-    uses:
-      mandraghen/gh-actions-template/.github/workflows/dependency-submission.yaml@main
   dockerize:
     needs: build
     permissions:

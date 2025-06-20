@@ -1,6 +1,6 @@
 spring:
   application:
-  name: sb-template
+    name: sb-template
   docker:
     compose:
       enabled: false

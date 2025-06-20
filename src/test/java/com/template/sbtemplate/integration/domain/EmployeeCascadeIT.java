@@ -1,4 +1,4 @@
-package com.template.sbtemplate.integration.domain.sample;
+package com.template.sbtemplate.integration.domain;
 
 import com.template.sbtemplate.domain.model.Address;
 import com.template.sbtemplate.domain.model.Employee;

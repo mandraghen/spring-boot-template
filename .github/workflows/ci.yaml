@@ -19,10 +19,11 @@ jobs:
       id-token: write
     uses:
       mandraghen/gh-actions-template/.github/workflows/dockerize.yaml@main
-#
-#  local-deploy:
-#    needs: dockerize
-#    uses: ./.github/workflows/promote.yml
-#    with:
-#      environment: local
-#    secrets: inherit
+
+  local-k8s-deploy:
+    needs: dockerize
+    uses: mandraghen/gh-actions-template/.github/workflows/promote.yaml@main
+    with:
+      environment: local
+      app-name: sb-template
+    secrets: inherit

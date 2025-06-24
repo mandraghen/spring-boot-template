@@ -19,6 +19,8 @@ jobs:
       id-token: write
     uses:
       mandraghen/gh-actions-template/.github/workflows/dockerize.yaml@main
+    with:
+      build-path: ./build/libs
 
   local-k8s-deploy:
     needs: dockerize
